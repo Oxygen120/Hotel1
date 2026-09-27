@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f5ef" />
+    <meta name="description" content="Explore our services, browse the menu, and order local home delivery." />
+    <title>Juniper &amp; Stone — Welcome</title>
+    <script>const oldRoute = new URLSearchParams(location.search); if (oldRoute.has("table") || oldRoute.has("t") || oldRoute.has("admin")) location.replace(`./menu.html${location.search}${location.hash}`);</script>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./theme-overrides.css" />
+    <link rel="stylesheet" href="./home.css" />
+    <link rel="stylesheet" href="./delivery.css" />
+  </head>
+  <body>
+    <header class="site-header home-header">
+      <a class="brand-lockup" href="#top" aria-label="Restaurant home">
+        <span class="brand-mark home-brand-mark"><span class="brand-initials">J<span>&amp;</span>S</span><img data-home-logo alt="" hidden /></span>
+        <span class="brand-copy"><strong data-home-name>Juniper &amp; Stone</strong><small>Kitchen · Bar · Garden</small></span>
+      </a>
+      <div class="header-actions"><span class="open-pill" id="home-status"><i></i><b>Open today</b><span>·</span><span data-home-hours>11 am – 11 pm</span></span><a class="button button-primary home-header-cta" id="header-delivery-link" href="./menu.html?order=delivery">Order delivery</a></div>
+    </header>
+
+    <main id="top">
+      <section class="home-hero">
+        <div class="home-hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> GOOD FOOD, GOOD COMPANY</p>
+          <h1>Come together.<br /><em>We’ll bring the good food.</em></h1>
+          <p class="home-lede">Explore our dining services, find something lovely on the menu, or have your favourites delivered to your door.</p>
+          <div class="home-hero-actions"><a class="button button-primary" id="delivery-cta" href="./menu.html?order=delivery">Order home delivery <span aria-hidden="true">→</span></a><a class="button button-outline" href="#our-services">Explore our services</a></div>
+          <p id="delivery-unavailable" class="home-availability" hidden>Home delivery is not available right now. Please check back soon.</p>
+          <div class="home-delivery-summary" id="delivery-summary"><span class="home-pin">⌖</span><span>Delivering in <strong data-home-city>Bengaluru</strong></span><span class="home-summary-divider"></span><span id="home-area-count">Selected local areas</span></div>
+        </div>
+        <div class="home-hero-art" role="img" aria-label="A colourful meal set out for sharing">
+          <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=85" alt="A colourful seasonal meal" />
+          <div class="home-art-note"><span>made fresh,</span><strong>just for you</strong><i>✳</i></div>
+          <span class="home-art-stamp">GOOD<br /><small>FOOD</small><br />✳</span>
+        </div>
+      </section>
+
+      <section class="home-services" id="our-services">
+        <div class="home-section-heading"><p class="eyebrow">HOW WOULD YOU LIKE TO ENJOY US?</p><h2>Good food, your way<span class="heading-dot">.</span></h2><p>Choose a service to get started.</p></div>
+        <div class="service-cards">
+          <article class="home-service-card delivery-service-card">
+            <span class="service-card-icon">⌖</span><p class="eyebrow">AT YOUR DOOR</p><h3>Home delivery</h3><p>Order from our menu and we’ll deliver to a supported area in <strong data-home-city>Bengaluru</strong>.</p>
+            <div class="home-area-list" id="home-area-list" aria-label="Delivery areas"></div><p class="home-delivery-fee" id="home-delivery-fee">Delivery fee shown at checkout</p>
+            <a class="service-card-link" id="service-delivery-link" href="./menu.html?order=delivery">Start a delivery order <span>→</span></a>
+          </article>
+          <article class="home-service-card dine-in-service-card">
+            <span class="service-card-icon">⌑</span><p class="eyebrow">HERE WITH US</p><h3>Dine in</h3><p>Take a seat, scan the QR code on your table, and send your order straight to the kitchen.</p>
+            <div class="service-card-note"><span>01</span><span>Scan your table’s unique QR to order.</span></div>
+            <span class="service-card-footnote">Table orders open from the table QR.</span>
+          </article>
+          <article class="home-service-card menu-service-card">
+            <span class="service-card-icon">✳</span><p class="eyebrow">MADE WITH CARE</p><h3>Fresh from our kitchen</h3><p>Browse our seasonal dishes, today’s specials, and the little extras that make a meal.</p>
+            <div class="service-card-note"><span>✦</span><span>See the full menu and current offers.</span></div>
+            <a class="service-card-link" href="./menu.html#menu-heading">Browse the menu <span>→</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="home-delivery-band">
+        <div><p class="eyebrow">LOCAL FOOD, LOCAL DELIVERY</p><h2>Close by, freshly made.</h2><p>Delivery is available only in the areas listed here. Choose your area at checkout so we can confirm your address.</p></div>
+        <div class="home-delivery-zones"><strong><span>⌖</span> Delivery area</strong><p><span data-home-city>Bengaluru</span></p><div id="home-area-chips" class="home-area-chips"></div></div>
+      </section>
+    </main>
+
+    <footer class="home-footer"><a class="footer-brand" href="#top" data-home-name>Juniper &amp; Stone</a><span data-home-address>12 Garden Lane, Bengaluru</span><a data-home-phone href="tel:+919876543210">+91 98765 43210</a><a class="home-staff-link" href="./admin.html">Staff sign in</a><span>Made with care, served with joy.</span></footer>
+    <script src="./config.js"></script>
+    <script type="module" src="./home.js"></script>
+  </body>
+</html>

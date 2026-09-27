@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f5ef" />
+    <meta name="description" content="A simple, delightful table-side menu and ordering experience." />
+    <title>Juniper &amp; Stone — Table Menu</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./theme-overrides.css" />
+    <link rel="stylesheet" href="./delivery.css" />
+  </head>
+  <body>
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+    <div id="customer-app">
+      <header class="site-header">
+        <a class="brand-lockup" href="./index.html" aria-label="Juniper and Stone home">
+          <span class="brand-mark" data-brand-mark aria-hidden="true"><span class="brand-initials">J<span>&amp;</span>S</span><img data-brand-logo alt="" hidden /></span>
+          <span class="brand-copy"><strong data-setting="restaurant_name">Juniper &amp; Stone</strong><small>Kitchen · Bar · Garden</small></span>
+        </a>
+        <div class="header-actions"><span id="restaurant-status" class="open-pill"><i></i><b>Open today</b><span>·</span><span id="opening-hours">11 am – 11 pm</span></span></div>
+      </header>
+      <div id="demo-banner" class="demo-banner" hidden>Preview mode — orders are saved only in this browser. Connect Supabase before sharing these QR codes with guests.</div>
+
+      <main id="top">
+        <section class="welcome-band">
+          <div class="welcome-copy">
+            <p class="eyebrow"><span class="eyebrow-line"></span> GOOD FOOD, GOOD COMPANY</p>
+            <h1 id="menu-welcome-title">A little something<br /><em>for the table.</em></h1>
+            <p id="menu-welcome-copy" class="welcome-text">Thoughtfully made, locally loved. Take your time and find your favourite.</p>
+            <div class="table-context"><span class="table-icon">⌑</span><span id="table-context-text">Welcome in</span><span class="context-divider"></span><span class="estimated-time">Usually ready in <strong id="estimated-time">15–25 min</strong></span></div>
+          </div>
+          <div class="welcome-art" role="img" aria-label="Fresh seasonal dishes served at the table">
+            <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=85" alt="A colourful seasonal meal shared at the table" />
+            <div class="art-caption"><span>made fresh,</span><strong>just for you</strong><i>✳</i></div>
+            <span class="art-stamp">J<br /><small>&amp;</small><br />S</span>
+          </div>
+        </section>
+
+        <section class="menu-section" aria-labelledby="menu-heading">
+          <div class="section-heading-row">
+            <div><p class="eyebrow"><span class="eyebrow-line"></span> FROM OUR KITCHEN</p><h2 id="menu-heading">The menu<span class="heading-dot">.</span></h2></div>
+            <div class="menu-tools">
+              <label class="search-box"><span aria-hidden="true">⌕</span><input id="menu-search" type="search" placeholder="Find a dish" aria-label="Search menu" /><kbd>/</kbd></label>
+              <button id="veg-filter" class="veg-filter" type="button" aria-pressed="false"><span class="veg-dot"></span> Veg only</button>
+            </div>
+          </div>
+          <nav id="category-list" class="category-list" aria-label="Menu categories"></nav>
+          <div id="menu-content" class="menu-content"><div class="loading-state"><span class="spinner"></span> Setting the table…</div></div>
+        </section>
+
+        <section class="promise-strip" aria-label="Our promise">
+          <div><span class="promise-icon">✳</span><p><strong>Good things take time</strong><small>Freshly prepared when you order</small></p></div>
+          <div><span class="promise-icon">⌁</span><p><strong>Made close to home</strong><small>Seasonal ingredients, local farms</small></p></div>
+          <div><span class="promise-icon">♡</span><p><strong>Here for everyone</strong><small>Tell us about any dietary needs</small></p></div>
+        </section>
+      </main>
+
+      <footer class="site-footer"><a class="footer-brand" data-setting="restaurant_name" href="#top">Juniper &amp; Stone</a><span>Made with care, served with joy.</span></footer>
+    </div>
+
+    <div id="cart-dock" class="cart-dock" hidden>
+      <div class="dock-summary"><span id="dock-count" class="dock-count">0</span><span><strong>Your table order</strong><small id="dock-items">0 items</small></span></div>
+      <strong id="dock-total" class="dock-total">₹0</strong>
+      <button id="open-cart" class="button button-light" type="button">Review order <span aria-hidden="true">→</span></button>
+    </div>
+
+    <div id="cart-overlay" class="overlay" hidden>
+      <button class="overlay-scrim" type="button" data-close-cart aria-label="Close order"></button>
+      <section class="cart-sheet" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+        <div class="sheet-grabber"></div>
+        <header class="sheet-header"><div><p class="eyebrow">YOUR TABLE ORDER</p><h2 id="cart-title">Looking good<span class="heading-dot">.</span></h2><p id="cart-table-label" class="muted-copy">Everything is made fresh to order.</p></div><button class="icon-button" type="button" data-close-cart aria-label="Close">×</button></header>
+        <div id="cart-lines" class="cart-lines"></div>
+        <div class="order-notes"><div id="delivery-fields" class="delivery-fields" hidden><p class="delivery-checkout-heading">HOME DELIVERY <span>Same-city service</span></p><label for="delivery-city">City</label><input id="delivery-city" readonly aria-readonly="true" /><label for="delivery-area">Delivery area <span>(required)</span></label><select id="delivery-area" required><option value="">Choose your area</option></select><label for="delivery-address">Full delivery address <span>(required)</span></label><textarea id="delivery-address" rows="2" maxlength="300" autocomplete="street-address" placeholder="House / flat, street, landmark"></textarea><label for="delivery-postal-code">PIN code <span>(optional)</span></label><input id="delivery-postal-code" maxlength="12" inputmode="numeric" autocomplete="postal-code" placeholder="PIN code" /></div><label for="customer-name">Name <span>(optional)</span></label><input id="customer-name" maxlength="80" autocomplete="name" placeholder="What should we call you?" /><label for="customer-phone">Mobile number <span>(optional)</span></label><input id="customer-phone" type="tel" maxlength="25" autocomplete="tel" placeholder="For order updates, if you'd like" /><label for="order-note">A note for our kitchen <span>(optional)</span></label><textarea id="order-note" rows="2" maxlength="400" placeholder="Allergies, little requests, the important stuff…"></textarea><label class="offer-consent"><input id="marketing-opt-in" type="checkbox" /><span>I'd like occasional offers on WhatsApp. <small>Optional. Leave unchecked if you don't want promotions.</small></span></label></div>
+        <div id="cart-totals" class="cart-totals"></div>
+        <button id="place-order" class="button button-primary button-wide" type="button">Send to the kitchen <span aria-hidden="true">→</span></button>
+        <p id="checkout-footnote" class="checkout-footnote">You can pay at the counter after your meal.</p>
+      </section>
+    </div>
+
+    <div id="success-overlay" class="overlay" hidden>
+      <button class="overlay-scrim" type="button" data-close-success aria-label="Close confirmation"></button>
+      <section class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
+        <button class="icon-button success-close" type="button" data-close-success aria-label="Close">×</button>
+        <div class="success-sparkle">✳</div><p class="eyebrow">WE'VE GOT IT</p><h2 id="success-title">Order sent<span class="heading-dot">.</span></h2><p id="success-copy" class="muted-copy">Our kitchen is on it. We'll bring everything right over.</p>
+        <div class="order-ticket"><span>ORDER NUMBER</span><strong id="success-number">—</strong><small id="success-status">Just received</small></div>
+        <button id="track-order" class="button button-primary button-wide" type="button">Follow your order <span aria-hidden="true">→</span></button>
+        <button id="new-order" class="text-button" type="button">Add something else</button>
+      </section>
+    </div>
+
+    <div id="tracking-overlay" class="overlay" hidden>
+      <button class="overlay-scrim" type="button" data-close-tracking aria-label="Close order tracking"></button>
+      <section class="tracking-card" role="dialog" aria-modal="true" aria-labelledby="tracking-title">
+        <button class="icon-button tracking-close" type="button" data-close-tracking aria-label="Close">×</button><p class="eyebrow">YOUR ORDER</p><h2 id="tracking-title">On its way<span class="heading-dot">.</span></h2><p id="tracking-meta" class="muted-copy"></p><div id="tracking-steps" class="tracking-steps"></div><div class="wait-game"><div><p class="eyebrow">A LITTLE SOMETHING WHILE YOU WAIT</p><strong id="wait-game-title">Kitchen garden</strong><p id="wait-game-copy">Tap the herb button 8 times to pick a tiny bunch.</p></div><button id="wait-game-button" type="button" aria-label="Pick a herb">🌿 <span id="wait-game-score">0/8</span></button></div><div class="tracking-help">Need a hand? Just wave us over.</div>
+      </section>
+    </div>
+
+    <div id="admin-app" class="admin-app" hidden>
+      <aside class="admin-sidebar">
+        <a class="brand-lockup admin-brand" href="./admin.html" target="_top"><span class="brand-mark" data-brand-mark><span class="brand-initials">J<span>&amp;</span>S</span><img data-brand-logo alt="" hidden /></span><span class="brand-copy"><strong data-setting="restaurant_name">Juniper &amp; Stone</strong><small>Restaurant desk</small></span></a>
+        <div class="sidebar-label">WORKSPACE</div>
+        <nav class="admin-nav" aria-label="Admin sections">
+          <button class="admin-nav-item active" data-view="overview" type="button"><span>▦</span> Overview</button>
+          <button class="admin-nav-item" data-view="orders" type="button"><span>▤</span> Orders <b id="nav-order-count" class="nav-count" hidden>0</b></button>
+          <button class="admin-nav-item" data-view="menu-admin" type="button"><span>☷</span> Menu</button>
+          <button class="admin-nav-item" data-view="tables" type="button"><span>⌑</span> Tables &amp; QR</button>
+          <button class="admin-nav-item" data-view="history" type="button"><span>◷</span> Order history</button>
+          <button class="admin-nav-item" data-view="offers" type="button"><span>✳</span> Offers &amp; specials</button>
+          <button class="admin-nav-item" data-view="customers" type="button"><span>♡</span> Customers</button>
+          <button class="admin-nav-item" data-view="reports" type="button"><span>▥</span> Reports</button>
+          <a class="admin-nav-item" data-view="settings" href="./settings.html" target="_top"><span>⚙</span> Settings</a>
+        </nav>
+        <div class="sidebar-bottom"><div class="staff-card"><span class="staff-avatar">JS</span><span><strong id="staff-name">Restaurant team</strong><small id="connection-state">Demo workspace</small></span><button id="sign-out" class="icon-button staff-logout" title="Sign out" type="button">↗</button></div><a class="back-to-menu" href="./menu.html">← View guest menu</a></div>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-topbar"><div class="breadcrumb"><span>Workspace</span><b>/</b><strong id="admin-breadcrumb">Overview</strong></div><div class="admin-top-actions"><span id="admin-date" class="admin-date"></span><button id="refresh-admin" class="icon-button refresh-button" type="button" title="Refresh data">↻</button><button id="admin-profile" class="profile-chip" type="button"><span class="profile-avatar">JS</span><span id="profile-name">Staff</span><span class="chevron">⌄</span></button></div></header>
+
+        <section id="admin-login" class="admin-login" hidden>
+          <div class="login-art"><span class="login-stamp">J<br /><small>&amp;</small><br />S</span><div><p class="eyebrow">JUNIPER &amp; STONE</p><h1>Your restaurant,<br /><em>in good hands.</em></h1><p>Sign in to manage today's service.</p></div><span class="login-art-note">good food<br />starts here ✳</span></div>
+          <form id="login-form" class="login-form"><div class="login-icon">J<span>&amp;</span>S</div><p class="eyebrow">STAFF WORKSPACE</p><h2>Welcome back<span class="heading-dot">.</span></h2><p class="muted-copy">Sign in to pick up where you left off.</p><label for="login-email">Email address</label><input id="login-email" type="email" autocomplete="username" required placeholder="you@restaurant.com" /><label for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" required placeholder="Your password" /><p id="login-error" class="form-error" hidden></p><button class="button button-primary button-wide" type="submit">Sign in <span aria-hidden="true">→</span></button><p class="login-tip">First time? Create a staff user in Supabase Auth, then add them to <code>staff_users</code>. See the setup guide.</p></form>
+        </section>
+
+        <div id="admin-workspace" hidden>
+          <section class="admin-view active" data-admin-view="overview">
+            <div class="view-title-row"><div><p id="overview-greeting" class="eyebrow">YOUR RESTAURANT IS READY</p><h1>Good afternoon<span class="heading-dot">.</span></h1><p class="muted-copy">Here's what's happening in your kitchen today.</p></div><button class="button button-dark" data-go-view="orders" type="button">View live orders <span aria-hidden="true">→</span></button></div>
+            <div id="metric-grid" class="metric-grid"></div>
+            <div class="dashboard-grid"><section class="panel recent-orders-panel"><div class="panel-heading"><div><h2>Recent orders</h2><p>Keep service moving smoothly.</p></div><button class="link-button" data-go-view="orders" type="button">All orders <span>→</span></button></div><div id="recent-orders" class="recent-orders"></div></section><section class="panel service-panel"><div class="panel-heading"><div><h2>Service snapshot</h2><p>A quick look around the room.</p></div><span class="live-indicator"><i></i> LIVE</span></div><div id="service-snapshot" class="service-snapshot"></div></section></div>
+          </section>
+          <section class="admin-view" data-admin-view="orders">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">THE PASS</p><h1>Orders<span class="heading-dot">.</span></h1><p class="muted-copy">A clear view of every table and ticket.</p></div><div class="title-actions"><span class="live-indicator"><i></i> LIVE UPDATES</span><button id="print-orders" class="button button-outline" type="button">Print list <span>↗</span></button></div></div>
+            <div class="order-toolbar"><div id="order-filters" class="segmented-control"><button class="selected" data-order-filter="active" type="button">Active <b id="active-order-count">0</b></button><button data-order-filter="all" type="button">All orders</button><button data-order-filter="completed" type="button">Completed</button></div><label class="search-box admin-search"><span>⌕</span><input id="order-search" type="search" placeholder="Find an order" aria-label="Search orders" /></label></div>
+            <div class="orders-layout"><div id="orders-list" class="orders-list"></div><aside id="order-detail" class="order-detail panel"><div class="detail-empty"><span>▤</span><h3>Select an order</h3><p>Choose an order to view items and update its status.</p></div></aside></div>
+          </section>
+          <section class="admin-view" data-admin-view="menu-admin">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">THE GOOD STUFF</p><h1>Menu<span class="heading-dot">.</span></h1><p class="muted-copy">Edit your dishes and what guests can order.</p></div><div class="title-actions"><button id="manage-categories" class="button button-outline" type="button">Categories</button><button id="add-menu-item" class="button button-primary" type="button">＋ Add a dish</button></div></div>
+            <div class="menu-admin-toolbar"><div id="admin-category-filters" class="category-pills"></div><label class="search-box admin-search"><span>⌕</span><input id="admin-menu-search" type="search" placeholder="Search dishes" aria-label="Search menu items" /></label></div>
+            <div id="admin-menu-list" class="admin-menu-list"></div>
+          </section>
+          <section class="admin-view" data-admin-view="tables">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">SCAN, ORDER, ENJOY</p><h1>Tables &amp; QR<span class="heading-dot">.</span></h1><p class="muted-copy">Each table gets its own menu link. Print and place it on the table.</p></div><button id="add-table" class="button button-primary" type="button">＋ Add a table</button></div>
+            <div class="qr-instructions"><span class="qr-instructions-icon">⌑</span><p><strong>One quick scan, all the good stuff.</strong><small>Guests scan a table QR, browse the menu and send their order straight to your live order board.</small></p><span class="qr-instructions-mark">✳</span></div>
+            <div id="table-grid" class="table-grid"></div>
+          </section>
+          <section class="admin-view" data-admin-view="history">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">EVERY TICKET, ALL IN ONE PLACE</p><h1>Order history<span class="heading-dot">.</span></h1><p class="muted-copy">Find past visits and reprint any bill.</p></div><div class="title-actions"><select id="history-range" class="select-control" aria-label="History date range"><option value="today">Today</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option><option value="all">All dates</option></select><button id="export-customers" class="button button-outline" type="button">Export guests <span>↗</span></button></div></div>
+            <label class="search-box admin-search history-search"><span>⌕</span><input id="history-search" type="search" placeholder="Order, guest or mobile" aria-label="Search order history" /></label><div id="history-list" class="history-list"></div>
+          </section>
+          <section class="admin-view" data-admin-view="offers">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">A LITTLE SOMETHING SPECIAL</p><h1>Offers &amp; specials<span class="heading-dot">.</span></h1><p class="muted-copy">Promote dishes with a discount or put today's favourite in the spotlight.</p></div><button class="button button-primary" data-go-view="menu-admin" type="button">Manage menu <span>→</span></button></div>
+            <div id="offer-metrics" class="metric-grid"></div><div id="offer-items" class="offer-items"></div>
+          </section>
+          <section class="admin-view" data-admin-view="customers">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">GUESTS WHO CHOSE TO HEAR FROM YOU</p><h1>Customers<span class="heading-dot">.</span></h1><p class="muted-copy">Contact details are optional. Promotional messages are only available for guests who opted in.</p></div><button id="export-marketing-customers" class="button button-outline" type="button">Export opted-in guests <span>↗</span></button></div>
+            <div class="customer-consent-note"><span>♡</span><p><strong>Respect the guest's choice.</strong><small>Only guests who tick the WhatsApp offers box at checkout are shown an offer-message shortcut.</small></p></div><label class="search-box admin-search customer-search"><span>⌕</span><input id="customer-search" type="search" placeholder="Search by guest name or mobile" aria-label="Search customers" /></label><div id="customer-list" class="customer-list"></div>
+          </section>
+          <section class="admin-view" data-admin-view="reports">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">A LITTLE LOOK BACK</p><h1>Reports<span class="heading-dot">.</span></h1><p class="muted-copy">Service totals, orders and popular dishes.</p></div><div class="title-actions"><select id="report-range" class="select-control" aria-label="Report date range"><option value="today">Today</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option></select><button id="export-report" class="button button-outline" type="button">Export CSV <span>↗</span></button></div></div>
+            <div id="report-metrics" class="metric-grid report-metrics"></div><div class="dashboard-grid report-grid"><section class="panel"><div class="panel-heading"><div><h2>Orders by status</h2><p>The shape of your service.</p></div></div><div id="status-breakdown" class="status-breakdown"></div></section><section class="panel"><div class="panel-heading"><div><h2>Guest favourites</h2><p>Most ordered dishes in this period.</p></div></div><div id="popular-items" class="popular-items"></div></section></div>
+          </section>
+          <section class="admin-view" data-admin-view="settings">
+            <div class="view-title-row compact-title"><div><p class="eyebrow">MAKE IT YOURS</p><h1>Settings<span class="heading-dot">.</span></h1><p class="muted-copy">A few details guests and your team will see.</p></div></div>
+            <form id="settings-form" class="settings-form panel"><div class="settings-section-heading"><span class="settings-number">01</span><div><h2>Business identity &amp; service</h2><p>These details appear to guests and on their printed bills.</p></div></div><div class="settings-fields"><label>Business name<input name="restaurant_name" required maxlength="100" /></label><label>Phone<input name="phone" maxlength="30" /></label><label class="field-wide">Address<input name="address" maxlength="200" /></label><label>Tax / GST (%)<input name="tax_percent" type="number" min="0" max="100" step="0.01" /></label><label>Currency code<input name="currency" maxlength="3" value="INR" /></label><label>UPI ID<input name="upi_id" maxlength="100" placeholder="name@bank" /></label><label>GSTIN <span>(optional)</span><input name="gstin" maxlength="20" placeholder="Business GST number" /></label><label>Today's hours<input name="opening_hours" maxlength="50" placeholder="11 am – 11 pm" /></label><label>Estimated preparation time<input name="estimated_time" maxlength="40" placeholder="15–25 min" /></label><label class="checkbox-field"><input name="is_accepting_orders" type="checkbox" /> Accepting orders</label><div class="settings-subsection field-wide"><div><h3>Home delivery area</h3><p>Guests can order delivery only in this city and in the areas you list here.</p></div></div><label class="checkbox-field"><input name="is_delivery_enabled" type="checkbox" /> Enable home delivery</label><label>Delivery city<input name="delivery_city" maxlength="100" placeholder="Your city" /></label><label>Delivery fee<input name="delivery_fee" type="number" min="0" step="0.01" /></label><label class="field-wide">Serviceable areas <span>(one locality per line)</span><textarea name="delivery_areas" rows="4" maxlength="2000" placeholder="Indiranagar&#10;Koramangala&#10;MG Road"></textarea></label><label class="field-wide">Logo image URL <span>(or upload below)</span><input name="logo_url" type="url" maxlength="500" placeholder="https://…" /></label><label class="field-wide">Upload logo <span>(PNG, JPG or WebP)</span><input id="logo-file" name="logo_file" type="file" accept="image/png,image/jpeg,image/webp" /><img id="logo-preview" class="logo-preview" alt="Logo preview" hidden /></label><label class="field-wide">Offer message <span>(used to prefill WhatsApp for opted-in guests)</span><textarea name="offer_message" rows="2" maxlength="400" placeholder="A little treat from our kitchen…">Hi! A little treat from {business}: we have something special for you.</textarea></label><label class="field-wide">Bill footer<input name="bill_footer" maxlength="160" placeholder="Thank you for dining with us!" /></label></div><div class="settings-footer"><p>Tax and discounts are calculated before the guest's total is shown.</p><button class="button button-primary" type="submit">Save details <span>→</span></button></div></form>
+            <div class="panel setup-hint"><span class="setup-hint-icon">✳</span><div><h3>Want every device to stay in sync?</h3><p>Connect a Supabase project in <code>config.js</code> and run <code>supabase/schema.sql</code>. The README walks you through the free setup.</p></div></div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="admin-dialog-root"></div>
+    <div id="print-root" aria-hidden="true"></div>
+
+    <script src="./config.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
